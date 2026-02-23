@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import FloorMap from '@/components/FloorMap';
 import CheckPromptBanner from '@/components/admin/CheckPromptBanner';
 import { motion, AnimatePresence } from 'framer-motion';
+import ReallocationAlertBanner from '@/components/admin/ReallocationAlertBanner';
 
 export default function AdminDashboard() {
     const [floorStatus, setFloorStatus] = useState<any>(null);
@@ -98,9 +99,11 @@ export default function AdminDashboard() {
 
     if (isLoading) return <div className="p-8">Loading dashboard...</div>;
 
+
     return (
         <div className="space-y-8">
             <CheckPromptBanner />
+            <ReallocationAlertBanner />
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-3xl font-serif font-bold text-[#8B1A1A]">Live Floor Status</h1>

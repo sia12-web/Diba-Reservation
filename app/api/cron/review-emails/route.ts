@@ -4,8 +4,8 @@ import { sendEmail } from '@/lib/email/sendEmail';
 
 export async function GET(req: NextRequest) {
     // Security: check if CRON_SECRET is provided by Vercel
-    const authHeader = req.headers.get('authorization');
-    if (process.env.NODE_ENV === 'production' && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    const authHeader = req.headers.get('Authorization');
+    if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

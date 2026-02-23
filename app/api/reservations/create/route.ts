@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: validated.error.format() }, { status: 400 });
         }
 
-        const { customerName, email, phone, partySize, date, time, tableIds, notes, isAdmin, waiveDeposit } = body;
+        const { customerName, email, phone, partySize, date, time, tableIds, notes, isAdmin, waiveDeposit, requiresReallocation } = body;
 
         if (!tableIds || !Array.isArray(tableIds) || tableIds.length === 0) {
             return NextResponse.json({ error: 'tableIds are required' }, { status: 400 });
@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
                 table_ids: tableIds,
                 status,
                 notes,
+                requires_reallocation: !!requiresReallocation,
                 created_by: isAdmin ? 'admin' : 'customer'
             })
             .select('id')

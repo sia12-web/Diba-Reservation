@@ -3,10 +3,12 @@ import { reservationConfirmationTemplate } from './templates/reservationConfirma
 import { depositRequiredTemplate } from './templates/depositRequired';
 import { depositConfirmationTemplate } from './templates/depositConfirmation';
 import { reviewRequestTemplate } from './templates/reviewRequest';
+import { tableUpdateTemplate } from './templates/tableUpdate';
+import { reservationReminderTemplate } from './templates/reservationReminder';
 
 interface EmailPayload {
     to: string;
-    template: 'reservation_confirmation' | 'deposit_required' | 'deposit_confirmation' | 'review_request';
+    template: 'reservation_confirmation' | 'deposit_required' | 'deposit_confirmation' | 'review_request' | 'table_update' | 'reservation_reminder';
     data: Record<string, any>;
 }
 
@@ -28,6 +30,12 @@ export async function sendEmail(payload: EmailPayload): Promise<void> {
             case 'review_request':
                 ({ subject, html } = reviewRequestTemplate(payload.data as any));
                 break;
+            case 'table_update':
+                ({ subject, html } = tableUpdateTemplate(payload.data as any));
+                break;
+            case 'reservation_reminder':
+                ({ subject, html } = reservationReminderTemplate(payload.data as any));
+                break;
             default:
                 throw new Error(`Invalid template: ${payload.template}`);
         }
@@ -42,6 +50,5 @@ export async function sendEmail(payload: EmailPayload): Promise<void> {
         console.log(`Email sent: ${payload.template} to ${payload.to}`);
     } catch (error) {
         console.error(`Failed to send email (${payload.template}):`, error);
-        // Email failure must never break the reservation flow
     }
 }

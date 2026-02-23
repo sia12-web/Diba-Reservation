@@ -1,8 +1,16 @@
 {
     "crons": [
         {
+            "path": "/api/cron/table-checks",
+            "schedule": "*/5 * * * *"
+        },
+        {
             "path": "/api/cron/review-emails",
             "schedule": "*/15 * * * *"
+        },
+        {
+            "path": "/api/cron/reminders",
+            "schedule": "0 * * * *"
         }
     ]
 }
