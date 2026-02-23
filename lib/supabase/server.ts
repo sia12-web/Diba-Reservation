@@ -43,19 +43,27 @@ export const createAdminClient = () => {
     const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!url || !key) {
+        const mockQuery = () => ({
+            select: mockQuery,
+            eq: mockQuery,
+            neq: mockQuery,
+            lt: mockQuery,
+            gt: mockQuery,
+            is: mockQuery,
+            in: mockQuery,
+            order: mockQuery,
+            range: mockQuery,
+            single: () => Promise.resolve({ data: null, error: null }),
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+            then: (cb: any) => Promise.resolve(cb({ data: [], error: null })),
+            insert: () => ({ select: () => ({ single: () => Promise.resolve({ data: null }) }) }),
+            update: () => ({ eq: () => Promise.resolve({ data: null }) }),
+            delete: () => ({ in: () => Promise.resolve({ data: null }) })
+        });
+
         return {
-            from: () => ({
-                select: () => ({
-                    eq: () => ({
-                        maybeSingle: () => Promise.resolve({ data: null }),
-                        single: () => Promise.resolve({ data: null }),
-                        order: () => ({ range: () => Promise.resolve({ data: [], count: 0 }) })
-                    })
-                }),
-                insert: () => ({ select: () => ({ single: () => Promise.resolve({ data: null }) }) }),
-                update: () => ({ eq: () => Promise.resolve({ data: null }) }),
-                delete: () => ({ in: () => Promise.resolve({ data: null }) })
-            })
+            auth: { getSession: () => Promise.resolve({ data: { session: null }, error: null }) },
+            from: mockQuery
         } as any;
     }
 

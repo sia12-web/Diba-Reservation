@@ -1,6 +1,17 @@
 export const generateTimeSlots = (date: string): string[] => {
-  // Parse YYYY-MM-DD manually to avoid timezone issues
-  const [year, month, day] = date.split('-').map(Number);
+  // Parse YYYY-MM-DD or MM/DD/YYYY to avoid timezone issues
+  let year, month, day;
+  if (date.includes('-')) {
+    [year, month, day] = date.split('-').map(Number);
+  } else {
+    // Fallback for other formats like MM/DD/YYYY
+    const parts = date.split('/').map(Number);
+    if (parts[0] > 1000) { // YYYY/MM/DD
+      [year, month, day] = parts;
+    } else { // MM/DD/YYYY
+      [month, day, year] = parts;
+    }
+  }
   const d = new Date(year, month - 1, day);
   const dayOfWeek = d.getDay(); // 0 is Sunday, 6 is Saturday
 
