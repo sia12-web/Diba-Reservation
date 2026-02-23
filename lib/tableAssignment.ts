@@ -24,6 +24,12 @@ export interface AssignmentResult {
     reallocationSuggestion?: string;
 }
 
+const formatTime = (totalMins: number) => {
+    const h = Math.floor(Math.max(0, totalMins) / 60);
+    const m = Math.max(0, totalMins) % 60;
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:00`;
+};
+
 export const getOccupiedTableIds = async (
     date: string,
     time: string,
@@ -38,12 +44,6 @@ export const getOccupiedTableIds = async (
     // because we assume each reservation lasts 90 mins.
     const startWindowMins = targetMinutes - 89;
     const endWindowMins = targetMinutes + 89;
-
-    const formatTime = (totalMins: number) => {
-        const h = Math.floor(Math.max(0, totalMins) / 60);
-        const m = Math.max(0, totalMins) % 60;
-        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:00`;
-    };
 
     const startTime = formatTime(startWindowMins);
     const endTime = formatTime(endWindowMins);
@@ -74,10 +74,60 @@ export const getOccupiedTableIds = async (
     if (dineError) throw dineError;
 
     const occupiedIds = new Set<number>();
-    reservations?.forEach(res => res.table_ids.forEach((id: number) => occupiedIds.add(id)));
-    dineIns?.forEach(di => di.table_ids.forEach((id: number) => occupiedIds.add(id)));
+    reservations?.forEach((res: any) => res.table_ids.forEach((id: number) => occupiedIds.add(id)));
+    dineIns?.forEach((di: any) => di.table_ids.forEach((id: number) => occupiedIds.add(id)));
+
+    // Get table locks
+    const { data: locks, error: lockError } = await supabase
+        .from('table_locks')
+        .select('table_id')
+        .gt('locked_until', new Date().toISOString());
+
+    if (!lockError) {
+        locks?.forEach((l: any) => occupiedIds.add(l.table_id));
+    }
 
     return Array.from(occupiedIds);
+};
+
+export const getEligibleTableIds = async (
+    partySize: number,
+    date: string,
+    time: string,
+    supabase: SupabaseClient
+): Promise<number[]> => {
+    const occupiedIds = await getOccupiedTableIds(date, time, supabase);
+
+    const { data: tables, error: tableError } = await supabase
+        .from('restaurant_tables')
+        .select('*');
+    if (tableError) throw tableError;
+
+    // Single tables that fit
+    const eligibleSingles = (tables as Table[]).filter(t =>
+        !occupiedIds.includes(t.id) &&
+        t.capacity_min <= partySize &&
+        t.capacity_max >= partySize
+    ).map(t => t.id);
+
+    // Combos that fit
+    const { data: combos, error: comboError } = await supabase
+        .from('table_combos')
+        .select('*');
+
+    let eligibleComboTables: number[] = [];
+    if (!comboError) {
+        const validCombos = (combos as TableCombo[]).filter(c =>
+            c.min_capacity <= partySize && c.max_capacity >= partySize
+        );
+        validCombos.forEach(c => {
+            if (c.table_ids.every(id => !occupiedIds.includes(id))) {
+                eligibleComboTables = [...eligibleComboTables, ...c.table_ids];
+            }
+        });
+    }
+
+    return Array.from(new Set([...eligibleSingles, ...eligibleComboTables]));
 };
 
 export const findAvailableTable = async (
@@ -86,7 +136,10 @@ export const findAvailableTable = async (
     time: string,
     supabase: SupabaseClient
 ): Promise<AssignmentResult | null> => {
+    const [hours, minutes] = time.split(':').map(Number);
+    const targetMinutes = hours * 60 + minutes;
     const occupiedIds = await getOccupiedTableIds(date, time, supabase);
+    // console.log('Occupied IDs:', occupiedIds);
 
     const { data: tables, error: tableError } = await supabase
         .from('restaurant_tables')
@@ -123,20 +176,20 @@ export const findAvailableTable = async (
         }
     }
 
+    // Party 8–14: table 11 first, then 2-table combos
+    if (partySize >= 8 && partySize <= 14) {
+        const table11 = availableTables.find(t => t.id === 11 && t.capacity_max >= partySize);
+        if (table11) {
+            return { tableIds: [11], isCombo: false, requiresReallocation: false };
+        }
+    }
+
     // Party 6–12: large singles (9 or 13)
     if (partySize >= 6 && partySize <= 12) {
         const large = availableTables.filter(t => (t.id === 9 || t.id === 13) && t.capacity_max >= partySize);
         if (large.length > 0) {
             // Pick the one with smaller capacity_max if both available? Or just first.
             return { tableIds: [large[0].id], isCombo: false, requiresReallocation: false };
-        }
-    }
-
-    // Party 8–14: table 11 first, then 2-table combos
-    if (partySize >= 8 && partySize <= 14) {
-        const table11 = availableTables.find(t => t.id === 11 && t.capacity_max >= partySize);
-        if (table11) {
-            return { tableIds: [11], isCombo: false, requiresReallocation: false };
         }
     }
 
@@ -181,11 +234,11 @@ export const findAvailableTable = async (
                     .lt('reservation_time', formatTime(targetMinutes + 89))
                     .filter('table_ids', 'cs', `{${criticalBlockers.join(',')}}`);
 
-                const isSmallPartyBlocker = resBlockers?.some(r => r.party_size <= 4);
+                const isSmallPartyBlocker = resBlockers?.some((r: any) => r.party_size <= 4);
 
                 if (isSmallPartyBlocker) {
-                    const blocker = resBlockers!.find(r => r.party_size <= 4)!;
-                    const blockedTableId = blocker.table_ids.find((id: number) => criticalBlockers.includes(id));
+                    const blocker = resBlockers!.find((r: any) => r.party_size <= 4)!;
+                    const blockedTableId = blocker.table_ids.find((id: any) => criticalBlockers.includes(id));
 
                     return {
                         tableIds: combo.table_ids,

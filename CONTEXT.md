@@ -5,7 +5,27 @@
 - Supabase (Postgres + Realtime + Auth)
 - Stripe (test mode), MailHog (local email)
 
-## Status: Phase 1 in progress
+## Status: Phase 4 complete
+- URL param encoding: Using `btoa(JSON.stringify(data))` for passing multi-step reservation state.
+- Interactive Floor Map: Complete with availability and selection logic.
+- Stripe Deposit Flow: End-to-end payment integration for parties 10+.
+- Reservation Expiry: Auto-cancels `deposit_required` reservations after 30 minutes (sweepless cleanup on check).
+- Email System: Full transactional email system with MailHog (local) and Nodemailer.
+- Review Requests: Automated cron job for sending review requests 2 hours after seating.
+- Production Swap: To replace MailHog with Resend/SendGrid, only update `transporter` config in `lib/email/client.ts`. Templates and triggers are provider-agnostic.
+- Admin Panel: Full management suite with live floor map, walk-in seating, and check prompts.
+- Admin Setup: Create service account via Supabase Dashboard > Auth > Add User. Role is determined by the app's middleware/admin client.
+- Floor Map Props:
+  ```typescript
+  interface FloorMapProps {
+    occupiedTableIds: number[]
+    eligibleTableIds: number[]
+    selectedTableIds: number[]
+    onTableSelect: (tableIds: number[]) => void
+    mode: 'customer' | 'admin'
+    showLegend?: boolean
+  }
+  ```
 
 ## Table Config
 - Regular (1-4): 1,2,3,5,7,8,10,12,14

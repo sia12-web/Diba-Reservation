@@ -1,0 +1,165 @@
+﻿  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 14
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 1: [ 1 ]
+
+      at Object.log (__tests__/tableAssignment.test.ts:59:17)
+
+  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 1
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 2: [ 10 ]
+
+      at Object.log (__tests__/tableAssignment.test.ts:72:17)
+
+  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 14
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 4: [ 9 ]
+
+      at Object.log (__tests__/tableAssignment.test.ts:86:17)
+
+  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 13
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 6: true
+
+      at Object.log (__tests__/tableAssignment.test.ts:103:17)
+
+node.exe : FAIL __tests__/tab
+leAssignment.test.ts
+At C:\Program 
+Files\nodejs\npx.ps1:29 
+char:3
++   & $NODE_EXE $NPX_CLI_JS 
+$args
++   
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: (FAIL __  
+  tests__/tableAssignment.   
+ test.ts:String) [], Remo    
+teException
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+  Table Assignment Engine
+    ΓêÜ 1. Party of 2 -> 
+gets a non-combo-critical 
+regular table (49 ms)
+    ΓêÜ 2. Party of 2 when 
+only table 10 is free -> 
+gets table 10 (last resort) 
+(5 ms)
+    ├ù 4. Party of 10 -> 
+gets table 11 (9 ms)
+    ΓêÜ 6. Party of 20 when 
+table 12 is occupied by 
+3-person party -> returns 
+requiresReallocation=true (5 
+ms)
+    ΓêÜ 9. Time slot 
+generation for a Friday 
+returns last slot of 21:00 
+(1 ms)
+    Γùï skipped 3. Party of 
+6 -> gets round table 4 or 6
+    Γùï skipped 5. Party of 
+20 -> gets a valid combo
+    Γùï skipped 7. Party of 
+40 -> returns null
+    Γùï skipped 8. Time slot 
+generation for a Sunday 
+returns last slot of 20:30
+
+  ΓùÅ Table Assignment 
+Engine ΓÇ║ 4. Party of 10 -> 
+gets table 11
+
+    expect(received).toEqual(
+expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 1
+
+      Array [
+    -   11,
+    +   9,
+      ]
+
+    [0m [90m 85 |[39m     
+    [36mconst[39m result 
+[33m=[39m [36mawait[39m f
+indAvailableTable([35m10[39
+m[33m,[39m [32m'2026-03-01
+'[39m[33m,[39m 
+[32m'19:00'[39m[33m,[39m 
+supabase)[33m;[39m
+     [90m 86 |[39m         
+console[33m.[39mlog([32m'R
+esult 4:'[39m[33m,[39m res
+ult[33m?[39m[33m.[39mtabl
+eIds)[33m;[39m
+    
+[31m[1m>[22m[39m[90m 87 
+|[39m         expect(result
+[33m?[39m[33m.[39mtableIds
+)[33m.[39mtoEqual([[35m11
+[39m])[33m;[39m
+     [90m    |[39m         
+                         
+[31m[1m^[22m[39m
+     [90m 88 |[39m     
+})[33m;[39m
+     [90m 89 |[39m
+     [90m 90 |[39m     
+test([32m'5. Party of 20 -> 
+gets a valid 
+combo'[39m[33m,[39m 
+[36masync[39m () 
+[33m=>[39m {[0m
+
+      at Object.toEqual (__te
+sts__/tableAssignment.test.ts
+:87:34)
+
+Test Suites: 1 failed, 1 
+total
+Tests:       1 failed, 4 
+skipped, 4 passed, 9 total
+Snapshots:   0 total
+Time:        2.529 s
+Ran all test suites with 
+tests matching "1.".

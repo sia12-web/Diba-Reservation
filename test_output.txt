@@ -1,0 +1,100 @@
+﻿  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 14
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 1: [ 1 ]
+
+      at Object.log (__tests__/tableAssignment.test.ts:59:17)
+
+  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 1
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 2: [ 10 ]
+
+      at Object.log (__tests__/tableAssignment.test.ts:72:17)
+
+  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 14
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 3: [ 4 ]
+
+      at Object.log (__tests__/tableAssignment.test.ts:79:17)
+
+  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 14
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 4: [ 9 ]
+
+      at Object.log (__tests__/tableAssignment.test.ts:86:17)
+
+  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 14
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 5: [ 11, 12, 13 ]
+
+      at Object.log (__tests__/tableAssignment.test.ts:93:17)
+
+  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 13
+
+      at log (lib/tableAssignment.ts:102:13)
+
+  console.log
+    Result 6: true
+
+      at Object.log (__tests__/tableAssignment.test.ts:103:17)
+
+  console.log
+    Tables from DB: 14
+
+      at log (lib/tableAssignment.ts:99:13)
+
+  console.log
+    Available Tables count: 14
+
+      at log (lib/tableAssignment.ts:102:13)
+
