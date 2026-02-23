@@ -24,8 +24,8 @@ interface FloorMapProps {
     showLegend?: boolean;
 }
 
-const CANVAS_WIDTH = 1100;
-const CANVAS_HEIGHT = 950;
+const CANVAS_WIDTH = 1050;
+const CANVAS_HEIGHT = 750;
 
 export default function FloorMap({
     occupiedTableIds,
